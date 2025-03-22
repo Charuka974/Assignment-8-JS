@@ -1,0 +1,82 @@
+#item-section{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.item-form{
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.item-buttons{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+.item-buttons > button{
+    border: 0;
+    color: white;
+    font-weight: bold;
+    padding:6px 10px;
+}
+.item-buttons > button:active{
+   background-color: black;
+}
+.item-save-btn{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background-color: rgb(57, 160, 250);
+}
+.item-remove-btn{
+    background-color: rgb(255, 70, 70);
+}
+.item-update-btn{
+    background-color: rgb(200, 200, 43);
+}
+.item-get-all-btn{
+    background-color: rgb(0, 193, 0);
+}
+.item-clear-all-btn{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: rgb(255, 70, 70);
+}
+#item-section > .table-container{
+    display: flex;
+    flex-direction: column;
+}
+#itemTable > thead > tr > th{
+    color: white;
+    background-color: rgb(225, 65, 65); 
+    padding: 10px;       
+}
+.validateError{
+    color: rgb(188, 12, 12);
+    font-size: 0.8rem;
+}
+
+@media screen and (max-width: 1000px)  {
+    #item-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .item-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .item-buttons > button {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    #itemTable {
+        display: block;
+        overflow-x: auto;
+    }
+}

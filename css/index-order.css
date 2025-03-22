@@ -1,0 +1,229 @@
+#order-section{
+    background-color: #f0f0f0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 70px;
+}
+.order-top-coontainer{
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.invoice-container{
+    background-color: white;
+    border-radius: 5px;
+    padding-bottom: 20px;
+}
+.item-select-container{
+    background-color: white;
+    border-radius: 5px;
+    padding-bottom: 20px;
+}
+.purchase-container{
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding-left: 5%;
+    padding-bottom: 20px;
+}
+.middle-container{
+    display: flex;
+    flex-direction: row;
+    
+}
+.middle-container > div{
+    display: flex;
+    flex-direction: column;
+}
+.middle-container > div > input{
+    height: 30px;
+    width: 80%;
+}
+#balanceTxt{
+    height: 30px;
+    width: 90%;
+    border-radius: 5px;
+    outline: 1px solid black;
+    border: 0;
+}
+
+.invoice-container > .header, .item-select-container > .header{
+    background-color: rgb(0, 193, 0);
+    color: white;
+    padding: 10px 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.invoice-container > .container > div{
+    display: flex;
+    flex-direction: column;
+}
+.total-text{
+    font-size: 24px;
+    color: rgb(39, 126, 255);
+}
+.subtotal-text{
+    font-size: 24px;
+    color: rgb(247, 43, 43);
+}
+.button-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.purchase-btn{
+    background-color: rgb(0, 193, 0);
+    border: 0;
+    width: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+.order-bottom-coontainer{
+    position: relative;
+    width: 90%;
+}
+#ordersTable{
+    width: 100%;
+    margin-top: 20px;
+}
+#ordersTable > thead > tr > th{
+    background-color: rgb(81, 192, 192);
+    color: white;
+    padding: 10px;
+}
+
+.invoice-container > .container{
+    height: 60%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+.address-container{
+    width: 95%;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.customer-choice-box{
+    border: 0;
+    outline: 1px solid black;
+    height: 20px;
+    border-radius: 5px;
+}
+.customer-choice-container{
+    display: flex;
+    flex-direction: column;
+}
+.customer-choice-container > select{
+    height: 22px;
+}
+.customer-choice-box:focus{
+    outline: 1px solid blue;
+    box-shadow: 2px 2px 5px rgba(0, 0, 255, 0.5);
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.date-txt-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.date-txt-container > input{
+    height: 22px;
+}
+
+.inner-container1{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+.inner-container2{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+.inner-container2 > div > input{
+    width: 80%;
+}
+.inner-container1 > div{
+    display: flex;
+    flex-direction: column;
+}
+.inner-container1 > div > input{
+    width: 80%;
+}
+.order-qty-container{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.outer-container > div{
+    padding: 10px;
+    gap: 10px;
+}
+.item-select-btn-container{
+    padding: 10px;
+    display: flex;
+    justify-content: end;
+}
+.add-item-btn{
+    background-color: rgb(247, 43, 43);
+    border: 0;
+    width: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+.item-choice-box{
+    border: 0;
+    outline: 1px solid black;
+    height: 22px;
+    border-radius: 5px;
+}
+.item-choice-box:focus{
+    outline: 1px solid blue;
+    box-shadow: 2px 2px 5px rgba(0, 0, 255, 0.5);
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+
+
+@media screen and (max-width: 1200px)  {
+    .order-top-coontainer{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (max-width: 800px)  {
+    .order-top-coontainer{
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .order-top-coontainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .invoice-container,
+    .item-select-container,
+    .purchase-container {
+        width: 90%;
+    }
+
+    .invoice-container > .container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}

@@ -1,0 +1,70 @@
+#home-section{
+    background-color: white;
+}
+.home-container > a{
+    text-decoration: none;
+}
+.menu-box{
+    background-color: white;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;     border-radius: 5px;
+}
+.menu-box-heading{
+    position: relative;
+    width: 100%;
+    background-color: rgb(225, 65, 65); 
+    text-decoration: none;
+    color: white;
+    padding: 10px 0;
+    border-radius: 5px;
+}
+.menu-box-heading > span{
+    padding-left: 10px;
+}
+.menu-box-num{
+    text-align: end;
+    position: relative;
+    color: black;
+    padding: 20px;
+}
+.menu-box-image{
+    padding-top: 10px;
+    width: 50%;
+    object-fit: contain;
+    padding-left: 10px;
+}
+.settings-new-btn{
+    position: relative;
+    top: 5%;
+    left: 70%;
+    width: 50px;
+    text-align: center;
+    background-color: rgb(225, 65, 65); 
+    border-radius: 5px;
+    color: white;
+    border: 0;
+    padding: 10px 10px;
+}
+.home-container {
+    background-color: #f0f0f0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 10px;
+    padding: 40px;
+    margin-top: 50px;
+}
+
+@media (max-width: 1024px) {
+    .home-container {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+@media (max-width: 768px) {
+    .home-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+

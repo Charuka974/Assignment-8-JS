@@ -4,8 +4,319 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPA - POS - System</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/index-home.css">
+    <link rel="stylesheet" href="/css/index-customer.css">
+    <link rel="stylesheet" href="/css/index-item.css">
+    <link rel="stylesheet" href="/css/index-order.css">
+
+    <style>
+        
+
+
+    </style>
+
 </head>
 <body>
+    <header>
+        <nav class="nav-bar">
+            <div class="logo">
+                <span>POS</span>
+            </div>
+            <ul>
+                <li><a href="#home-section"><button class="nav-bar-btn">Home</button></a></li>
+                <li><a href="#customer-section"><button class="nav-bar-btn">Customers</button></a></li>
+                <li><a href="#item-section"><button class="nav-bar-btn">Items</button></a></li>
+                <li><a href="#order-section"><button class="nav-bar-btn">Orders</button></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+    <section id="home-section" class="main-section">
+        <div class="home-container">
+            <a href="#customer-section">
+                <div class="menu-box">
+                    <div class="menu-box-heading"><span>Customers</span></div>
+                    <img class="menu-box-image" src="/assets/images/customers-icon.jpg" alt="">
+                    <span class="menu-box-num" id="customerCont">0</span>
+                </div>
+            </a>
+            <a href="#item-section">
+                <div class="menu-box">
+                    <div class="menu-box-heading"><span>Items</span></div>
+                    <img class="menu-box-image" src="/assets/images/box-icon-in-glyph-style-vector.jpg" alt="">
+                    <span class="menu-box-num" id="itemCont">0</span>
+                </div>
+            </a>
+            <a href="#order-section">
+                <div class="menu-box">
+                    <div class="menu-box-heading"><span>Orders</span></div>
+                    <img class="menu-box-image" src="/assets/images/cart icon.jpg" alt="">
+                    <span class="menu-box-num" id="ordersCont">0</span>
+                </div>
+            </a>
+            <a href="#settings-section">
+                <div class="menu-box">
+                    <div class="menu-box-heading"><span>Settings</span></div>
+                    <img class="menu-box-image" src="/assets/images/gear-icon-in-flat-style-cog-wheel-illustration-on-white-isolated-background-gearwheel-cogwheel-business-concept-vector.jpg" alt="">
+                    <button class="settings-new-btn" id="settingsNew">new</button>
+                </div>
+            </a>  
+        </div>
+        
+    </section>
+    <script type="module" src="/controller/HomeController.js"></script>
+
+    <section id="customer-section" class="main-section">
+        <form class="customer-form" action="">
+            <h2>Customer Registration</h2>
+            <label class="field-name" for="">Customer ID</label>
+            <input class="form-input" type="text" id="customerId" placeholder="Enter customer ID">
+            <span class="validateError" id="cusIdError"></span>
+            <br>
+            <label class="field-name" for="">Customer Name</label>
+            <input class="form-input" type="text" id="customerName" placeholder="Enter full name">
+            <span class="validateError" id="cusNameError"></span>
+            <br>
+            <label class="field-name" for="">Customer Address</label>
+            <input class="form-input" type="text" id="customerAddress" placeholder="Enter street, city, ZIP">
+            <span class="validateError" id="cusAddressError"></span>
+            <br>
+            <label class="field-name" for="">Customer Salary</label>
+            <input class="form-input" type="number" id="customerSalary" placeholder="Enter salary (e.g., 50000.00)">
+            <span class="validateError" id="cusSalaryError"></span>
+
+            <div class="customer-buttons">
+                <button id="cus-save" class="cus-save-btn" type="">Save Customer</button>
+                <button id="cus-remove" class="cus-remove-btn" type="">Remove</button>
+                <button id="cus-update" class="cus-update-btn" type="">Update</button>
+                <button id="cus-get-all" class="cus-get-all-btn" type="">Get All</button>
+                <button id="cus-clear-all" class="cus-clear-all-btn" type="">Clear All</button>
+            </div>
+        </form>
+    
+        <div class="table-container">
+            <h2>Registered Customers</h2>
+            <table id="customerTable">
+                <thead>
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Customer Name</th>
+                        <th>Customer Address</th>
+                        <th>Customer Salary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <script  type="module" src="/controller/CustomerController.js"></script>
+
+    <section id="item-section" class="main-section">
+        <form class="item-form" action="">
+            <h2>Item Form</h2>
+            <label class="field-name" for="">Item Code</label>
+            <input class="form-input" type="text" id="itemCode" placeholder="Enter item code">
+            <span class="validateError" id="itemCodeError"></span>
+            <br>
+            <label class="field-name" for="">Item Name</label>
+            <input class="form-input" type="text" id="itemName" placeholder="Enter item name">
+            <span class="validateError" id="itemNameError"></span>
+            <br>
+            <label class="field-name" for="">Item Qty</label>
+            <input class="form-input" type="number" id="itemQty" placeholder="Enter item quantity (e.g., 100.00)">
+            <span class="validateError" id="itemQtyError"></span>
+            <br>
+            <label class="field-name" for="">Item Price</label>
+            <input class="form-input" type="number" id="itemPrice" placeholder="Enter price (e.g., 50000.00)">
+            <span class="validateError" id="itemPriceError"></span>
+
+            <div class="item-buttons">
+                <button id="item-save" class="cus-save-btn" type="">Save Item</button>
+                <button id="item-remove" class="cus-remove-btn" type="">Remove</button>
+                <button id="item-update" class="cus-update-btn" type="">Update</button>
+                <button id="item-get-all" class="cus-get-all-btn" type="">Get All</button>
+                <button id="item-clear-all" class="cus-clear-all-btn" type="">Clear All</button>
+            </div>
+        </form>
+    
+        <div class="table-container">
+            <h2>Added Items</h2>
+            <table id="itemTable">
+                <thead>
+                    <tr>
+                        <th>Item Code</th>
+                        <th>Item Name</th>
+                        <th>Item Qty</th>
+                        <th>Item Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <script type="module" src="/controller/ItemController.js"></script>
+    
+
+    <section id="order-section" class="main-section">
+        <div class="order-top-coontainer">
+            <div class="invoice-container">
+                <div class="header"><span>Invoice Details</span></div>
+                <div class="container">
+                    <div>
+                        <label class="field-name" for="">Order ID :</label>
+                        <input class="form-input" type="text" id="orderIdTxt">
+                        <span class="validateError" id="orderIdError"></span>
+                    </div>
+                    <div class="date-txt-container"> 
+                        <label class="field-name" for="">Date :</label>
+                        <input class="form-input" type="date" id="orderDateTxt">
+                        <span class="validateError" id="dateTxtError"></span>
+                    </div>
+                    <div class="customer-choice-container">
+                        <label class="field-name" for="">Customer :</label>
+                        <select class="customer-choice-box" id="customerChoice" name="choices" id="customerChoice">
+                            <option value="option0"></option>
+                        </select>
+                        <span class="validateError" id="customerTxtError"></span>
+                    </div>
+                    <div>
+                        <label class="field-name" for="">Customer ID :</label>
+                        <input class="form-input" type="text" id="customerIdTxt">
+                        <span class="validateError" id="customerIdTxtError"></span>
+                    </div>
+                    <div>
+                        <label class="field-name" for="">Name :</label>
+                        <input class="form-input" type="text" id="customerNameTxt">
+                        <span class="validateError" id="customerNameTxtError"></span>
+                    </div>
+                    <div>
+                        <label class="field-name" for="">Salary :</label>
+                        <input class="form-input" type="number" id="orderCusSalaryTxt">
+                        <span class="validateError" id="salaryTxtError"></span>
+                    </div>
+                    
+                </div>
+                <div class="address-container">
+                    <label class="field-name" for="">Address :</label>
+                    <input class="form-input" type="text" id="orderCusAddressTxt">
+                    <span class="validateError" id="addressTxtError"></span>
+                </div>
+                
+
+            </div>
+
+            <div class="item-select-container">
+                <div class="header"><span>Item Select</span></div>
+                <div class="outer-container">
+                    <div class="inner-container1">
+                        <div>
+                            <label class="field-name" for="">Item :</label>
+                            <select class="form-input item-choice-box" name="choices" id="itemChoices">
+                                <option value="option0"></option>
+                            </select>
+                            <span class="validateError" id="orderItemTxtError"></span>    
+                        </div>
+                        <div>
+                            <label class="field-name" for="">Item Code :</label>
+                            <input class="form-input" type="text" id="orderItemCodeTxt">
+                            <span class="validateError" id="orderItemCodeTxtError"></span>    
+                        </div>
+                    </div>
+                    
+                    <div class="inner-container2">
+                        <div>
+                            <label class="field-name" for="">Item Name :</label>
+                            <input class="form-input" type="text" id="orderitemNameTxt">
+                            <span class="validateError" id="orderitemNameTxtError"></span>    
+                        </div>
+                        <div>
+                            <label class="field-name" for="">Price :</label>
+                            <input class="form-input" type="number" id="orderItemPriceTxt">
+                            <span class="validateError" id="orderItemPriceTxtError"></span>    
+                        </div>
+                        <div>
+                            <label class="field-name" for="">Qty on Hand :</label>
+                            <input class="form-input" type="number" id="onhandItemQtyTxt">
+                            <span class="validateError" id="onhandItemQtyTxtError"></span>    
+                        </div>
+                    </div>
+
+                </div>
+                <div class="order-qty-container">
+                    <label class="field-name" for="">Order Quantity :</label>
+                    <input class="form-input" type="number" id="orderQtyTxt">
+                    <span class="validateError" id="orderQtyTxtError"></span>    
+                </div>
+
+                <div class="item-select-btn-container">
+                    <button class="add-item-btn" id="addItem">Add Item</button>
+                </div>
+                
+            </div>
+
+            <div class="purchase-container">
+                <span class="total-text">Total : <span id="total">00.0</span>Rs/=</span>
+                <span class="validateError" id="totalError"></span>
+                <span class="subtotal-text">SubTotal : <span id="subTotal">00.0</span>Rs/=</span>
+                <span class="validateError" id="subTotalError"></span>
+                
+                <div class="middle-container">
+                    <div>
+                        <label class="field-name" for="">Cash</label>
+                        <input class="form-input" type="number" id="cashTxt">
+                        <span class="validateError" id="cashTxtError"></span>
+                    </div>
+                    <div>
+                        <label class="field-name" for="">Discount</label>
+                        <input class="form-input" type="number" id="discountTxt">
+                        <span class="validateError" id="discountTxtError"></span>    
+                    </div>
+                </div>
+                <div>
+                    <label class="field-name balance-label" for="">Balance</label>
+                    <input class="form-input" type="number" id="balanceTxt">
+                    <span class="validateError" id="balanceTxtError"></span>    
+                </div>
+                <br>
+                <div class="button-container">
+                    <button class="purchase-btn" id="purchase">Purchase</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="order-bottom-coontainer">
+            <table id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>Item Code</th>
+                        <th>Item Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+    <script type="module" src="/controller/OrderController.js"></script>
+
+
+    <section id="settings-section" class="main-section">
+        
+    </section>
+
+    <script src="/controller/IndexController.js"></script>
+    
     
 </body>
 </html>
