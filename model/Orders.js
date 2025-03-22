@@ -2,7 +2,9 @@ import { ordersArray } from '../db/DB.js';
 import { updateCounts } from '../controller/HomeController.js';
 
 export const orderModel = {
-    saveOrder
+    saveOrder,
+    getNextOrderId,
+    findOrderById
 }; 
 
 function saveOrder(order) {
@@ -18,4 +20,23 @@ function saveOrder(order) {
     console.log("Order saved:", order);
     updateCounts();
     return true;
+}
+
+
+function getNextOrderId() {
+    if (ordersArray.length === 0) {
+        return "OID-001";
+    }
+
+    let maxId = Math.max(
+        ...ordersArray.map(order => parseInt(order.orderId.split("-")[1], 10))
+    );
+
+    let nextId = maxId + 1; 
+    return `OID-${String(nextId).padStart(3, "0")}`; 
+}  
+
+function findOrderById(orderId) {
+    let order = ordersArray.find(o => o.orderId === orderId);
+    return order || null;  // Return null if not found
 }

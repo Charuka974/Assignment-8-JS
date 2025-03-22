@@ -2,6 +2,8 @@ import { itemModel } from '../model/Item.js';
 
 $(document).ready(function () {
     handleRowClick();
+    loadNextItemId();
+    loadAllItems();
 
     $('#item-save').click(function (event) {
         event.preventDefault();
@@ -96,8 +98,49 @@ $(document).ready(function () {
                 alert("Item Code not found!");
             }
         }
+    }); 
+
+
+    //------------------ validate Regex -------------
+
+    function validateField(inputElement, pattern, errorSpanId, errorMessage) {
+        let value = inputElement.val().trim();
+        let errorSpan = $("#" + errorSpanId);
+
+        if (!pattern.test(value)) {
+            inputElement.css("border", "2px solid red");
+            errorSpan.text(errorMessage);
+        } else {
+            inputElement.css("border", "2px solid green");
+            errorSpan.text("");
+        }
+    }
+
+    // Attach validation on input
+    $("#itemCode").on("input", function () {
+        validateField($(this), /^I\d{2}-\d{3}$/, "itemCodeError", "Invalid format! (e.g., I00-001)");
     });
+
+    $("#itemName").on("input", function () {
+        validateField($(this), /^[A-Za-z\s]+$/, "itemNameError", "Only letters and spaces allowed.");
+    });
+
+    $("#itemQty").on("input", function () {
+        validateField($(this), /^\d+$/, "itemQtyError", "Only whole numbers allowed.");
+    });
+
+    $("#itemPrice").on("input", function () {
+        validateField($(this), /^\d+(\.\d{1,2})?$/, "itemPriceError", "Enter a valid price (e.g., 50000.00).");
+    });
+
+
+
 });
+
+function loadNextItemId() {
+    let nextId = itemModel.getNextItemId();
+    $("#itemCode").val(nextId).prop("readonly", false);
+}
 
 function handleRowClick() {
     $(document).on("click", "#itemTable tbody tr", function () {
@@ -132,6 +175,29 @@ function removeFromTable(itemCode) {
         }
     });
 }
+
+//----------------------------
+function loadAllItems() {
+    const items = itemModel.getAllItems(); // Get items from the model
+    displayItems(items); // Display the items in the table
+}
+
+function displayItems(items) {
+    const tbody = $("#itemTable tbody");
+    tbody.empty(); // Clear the existing table rows
+
+    items.forEach(item => {
+        let row = `<tr>
+            <td>${item.itemCode}</td>
+            <td>${item.itemName}</td>
+            <td>${item.itemQtyOnHand}</td>
+            <td>${item.itemPrice}</td>
+        </tr>`;
+
+        tbody.append(row); // Append the row to the table body
+    });
+}
+//----------------------------
 
 function updateTable(item) {
     $("#itemTable tbody tr").each(function () {

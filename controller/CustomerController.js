@@ -1,7 +1,10 @@
 import { customerModel } from '../model/Customer.js';
 
 $(document).ready(function () {
+ 
     handleRowClick();
+    loadNextCustomerId();
+    loadAllCustomers();
 
     $('#cus-save').click(function (event) {
         event.preventDefault();
@@ -94,9 +97,49 @@ $(document).ready(function () {
             }
         }
     });
+
+    //------------------- validate regex ------------------
+
+    $(document).ready(function () {
+        function validateField(inputElement, pattern, errorSpanId, errorMessage) {
+            let value = inputElement.val().trim();
+            let errorSpan = $("#" + errorSpanId);
+    
+            if (!pattern.test(value)) {
+                inputElement.css("border", "2px solid red");
+                errorSpan.text(errorMessage);
+            } else {
+                inputElement.css("border", "2px solid green");
+                errorSpan.text("");
+            }
+        }
+    
+        // Attach validation on input
+        $("#customerId").on("input", function () {
+            validateField($(this), /^C\d{2}-\d{3}$/, "cusIdError", "Invalid format! (e.g., C00-001)");
+        });
+    
+        $("#customerName").on("input", function () {
+            validateField($(this), /^[A-Za-z\s]+$/, "cusNameError", "Only letters and spaces allowed.");
+        });
+    
+        $("#customerAddress").on("input", function () {
+            validateField($(this), /^[A-Za-z0-9\s,.-]{3,}$/, "cusAddressError", "Address must be at least 3 characters.");
+        });
+    
+        $("#customerSalary").on("input", function () {
+            validateField($(this), /^\d+(\.\d{1,2})?$/, "cusSalaryError", "Enter a valid salary (e.g., 50000.00).");
+        });
+    });
+    
     
 
 });
+
+function loadNextCustomerId() {
+    let nextId = customerModel.getNextCustomerId();
+    $("#customerId").val(nextId).prop("readonly", false); 
+}
 
 function handleRowClick() {
     $(document).on("click", "#customerTable tbody tr", function () {
@@ -111,6 +154,31 @@ function handleRowClick() {
         $("#customerSalary").val(cusSalary);
     });
 }
+
+
+//--------------------------------
+function loadAllCustomers() {
+    const customers = customerModel.loadAllCustomersFromModel(); 
+    displayAllCustomers(customers);
+}
+
+function displayAllCustomers(customers) {
+    const tbody = $("#customerTable tbody");
+    tbody.empty(); 
+
+    customers.forEach(customer => {
+        let row = `<tr>
+            <td>${customer.cusId}</td>
+            <td>${customer.cusName}</td>
+            <td>${customer.cusAddress}</td>
+            <td>${customer.cusSalary}</td>
+        </tr>`;
+
+        tbody.append(row); 
+    });
+}
+//----------------------------------
+
 
 function addToTable(customer) {
     let newRow = `<tr>
@@ -191,3 +259,4 @@ function isValidated() {
 
     return isValid;
 }
+

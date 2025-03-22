@@ -5,9 +5,17 @@ import { orderModel } from '../model/Orders.js';
 import { orderDetailsModel } from '../model/OrderDetails.js';
 import { customerModel } from '../model/Customer.js';
 import { itemModel } from '../model/Item.js';
-
+ 
 
 $(document).ready(function () {
+    loadNextOrderId();
+
+    $("#orderIdTxt").on("input", function () {
+        let orderId = $(this).val().trim();  
+        if (orderId) {
+            searchOrder(orderId);  
+        }
+    });
 
     $("#customerChoice").click(function () {
         let select = $("#customerChoice");
@@ -53,7 +61,7 @@ $(document).ready(function () {
             $('#orderCusSalaryTxt').val(cusDetails.cusSalary);
         }
     }
-    
+
 
     $("#itemChoices").click(function () {
     let select = $("#itemChoices");
@@ -180,6 +188,10 @@ $(document).ready(function () {
 
 });
 
+function loadNextOrderId() {
+    let nextOrderId = orderModel.getNextOrderId();
+    $("#orderIdTxt").val(nextOrderId).prop("readonly", false);
+}
 
 function addToOrderTable(orderItem) {
     let newRow = `<tr>
@@ -309,3 +321,74 @@ function resetOrderForm() {
     $('#ordersTable tbody').empty();
 
 }
+
+function searchOrder(orderId) {
+    let order = orderModel.findOrderById(orderId);  // Find order by ID
+    if (order) {
+        // If order is found, populate the order form fields
+        $("#orderIdTxt").val(order.orderId);
+        $("#orderDateTxt").val(order.orderDate);
+        $("#customerIdTxt").val(order.customerId);
+
+        console.log("Order found:", order);
+
+        // Fetch the order details and display them
+        let orderDetails = orderDetailsModel.findOrderDetailsByOrderId(orderId);
+        if (orderDetails.length > 0) {
+            console.log("Order Details:", orderDetails);
+
+            // Clear the table before populating it
+            $('#ordersTable tbody').empty();
+
+            // Loop through order details and populate the table
+            orderDetails.forEach(orderItem => {
+                let item = itemModel.findItemByCode(orderItem.itemCode);
+                let itemName = item ? item.itemName : "Item Not Found"; // Default value if item is not found
+            
+                let newRow = `<tr>
+                    <td>${orderItem.itemCode}</td>
+                    <td>${itemName}</td>
+                    <td>${orderItem.itemPrice.toFixed(2)}</td>
+                    <td>${orderItem.itemQty}</td>
+                    <td>${orderItem.total.toFixed(2)}</td>
+                </tr>`;
+                $("#ordersTable tbody").append(newRow);
+            });
+            
+            loadCustomerforOrderSearch(order.customerId);
+            setTotalAndBalance(order);
+        } else {
+            console.log("No order details found.");
+        }
+    } else {
+        console.log(`Order with ID ${orderId} not found.`);
+    }
+}
+
+function setTotalAndBalance(order){
+    $("#cashTxt").val(order.cash);
+    $("#discountTxt").val(order.discount);
+    $("#balanceTxt").val(order.balance);
+}
+
+function loadCustomerforOrderSearch(cusId){
+    let customerId = cusId;
+
+        if (customerId) {
+            let customer = customerModel.findCustomerById(customerId);
+            if (customer) {
+                $('#customerNameTxt').val(customer.cusName);
+                $('#orderCusAddressTxt').val(customer.cusAddress);
+                $('#orderCusSalaryTxt').val(customer.cusSalary);
+            } else {
+                $('#customerNameTxt').val('');
+                $('#orderCusAddressTxt').val('');
+                $('#orderCusSalaryTxt').val('');
+            }
+        } else {
+            $('#customerNameTxt').val('');
+            $('#orderCusAddressTxt').val('');
+            $('#orderCusSalaryTxt').val('');
+        }
+}
+ 

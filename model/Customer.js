@@ -6,8 +6,9 @@ export const customerModel = {
     deleteCustomer,
     updateCustomer,
     findCustomerById,
-    getCustomerIds
-
+    getCustomerIds,
+    getNextCustomerId,
+    loadAllCustomersFromModel
 };
 
 function saveCustomer(customer) {
@@ -63,6 +64,10 @@ function updateCustomer(customer) {
     }
 }
 
+function loadAllCustomersFromModel() {
+    return customersArray; 
+}
+
 function findCustomerById(customerId) {
     customerId = customerId.toString().trim();
 
@@ -84,4 +89,18 @@ function getCustomerIds() {
         return [];
     }
     return customersArray.map(customer => customer.cusId);
+}
+
+function getNextCustomerId() {
+    if (customersArray.length === 0) {
+        return "C00-001"; // Start from C00-001 if no customers exist
+    }
+
+    // Extract numeric part from IDs (e.g., C00-001 -> 001)
+    let maxId = Math.max(
+        ...customersArray.map(c => parseInt(c.cusId.split("-")[1], 10))
+    );
+
+    let nextId = maxId + 1; 
+    return `C00-${String(nextId).padStart(3, "0")}`; // Format with leading zeros
 }

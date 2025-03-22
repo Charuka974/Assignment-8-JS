@@ -2,7 +2,8 @@ import { orderDetailsArray } from '../db/DB.js';
 
 export const orderDetailsModel = {
     saveOrderDetails,
-    calculateSubtotal
+    calculateSubtotal,
+    findOrderDetailsByOrderId
 };
 
 function saveOrderDetails(orderDetails) {
@@ -12,4 +13,8 @@ function saveOrderDetails(orderDetails) {
 
 function calculateSubtotal() {
     return orderDetailsArray.reduce((sum, item) => sum + item.total, 0);
+}
+
+function findOrderDetailsByOrderId(orderId) {
+    return orderDetailsArray.filter(details => details.orderId === orderId);
 }

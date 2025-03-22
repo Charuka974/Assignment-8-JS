@@ -7,7 +7,9 @@ export const itemModel = {
     updateItem,
     findItemByCode,
     getItemCodes,
-    getUpdatedArray
+    getUpdatedArray,
+    getNextItemId,
+    getAllItems
 };
 
 function saveItem(item) {
@@ -70,6 +72,10 @@ function findItemByCode(itemCode) {
     }
 }
 
+function getAllItems() {
+    return itemsArray;
+}
+
 function getItemCodes() {
     if (!Array.isArray(itemsArray)) {
         console.error("Error: itemsArray is not an array");
@@ -77,6 +83,19 @@ function getItemCodes() {
     }
     return itemsArray.map(item => item.itemCode);
 }
+
+function getNextItemId() {
+    if (itemsArray.length === 0) {
+        return "I00-001";
+    }
+    let maxId = Math.max(
+        ...itemsArray.map(item => parseInt(item.itemCode.split("-")[1], 10))
+    );
+
+    let nextId = maxId + 1; 
+    return `I00-${String(nextId).padStart(3, "0")}`; 
+}
+
 
 function getUpdatedArray() {
     return itemsArray;
