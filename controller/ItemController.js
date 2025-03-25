@@ -7,23 +7,25 @@ $(document).ready(function () {
 
     $('#item-save').click(function (event) {
         event.preventDefault();
-
-        if (isItemValidated()) {
+    
+        if (isItemFieldValid()) {
             let item = {
                 itemCode: $('#itemCode').val(),
                 itemName: $('#itemName').val(),
                 itemQtyOnHand: $('#itemQty').val(),
                 itemPrice: $('#itemPrice').val()
             };
-
+    
             let isSaved = itemModel.saveItem(item);
-
+    
             if (isSaved) {
                 addToTable(item);
                 $(".item-form")[0].reset();
+                console.log("Item saved successfully!");
             }
         }
     });
+    
 
     $('#item-remove').click(function (event) {
         event.preventDefault();
@@ -110,13 +112,14 @@ $(document).ready(function () {
         if (!pattern.test(value)) {
             inputElement.css("border", "2px solid red");
             errorSpan.text(errorMessage);
+            return false;
         } else {
             inputElement.css("border", "2px solid green");
             errorSpan.text("");
+            return true;
         }
     }
 
-    // Attach validation on input
     $("#itemCode").on("input", function () {
         validateField($(this), /^I\d{2}-\d{3}$/, "itemCodeError", "Invalid format! (e.g., I00-001)");
     });
@@ -133,6 +136,18 @@ $(document).ready(function () {
         validateField($(this), /^\d+(\.\d{1,2})?$/, "itemPriceError", "Enter a valid price (e.g., 50000.00).");
     });
 
+    function isItemFieldValid() {
+        let isValid = true;
+    
+        // Check each field validity and combine results using logical AND (&&)
+        isValid = isValid && validateField($('#itemCode'), /^I\d{2}-\d{3}$/, "itemCodeError", "Invalid format! (e.g., I00-001)");
+        isValid = isValid && validateField($('#itemName'), /^[A-Za-z\s]+$/, "itemNameError", "Only letters and spaces allowed.");
+        isValid = isValid && validateField($('#itemQty'), /^\d+$/, "itemQtyError", "Only whole numbers allowed.");
+        isValid = isValid && validateField($('#itemPrice'), /^\d+(\.\d{1,2})?$/, "itemPriceError", "Enter a valid price (e.g., 50000.00).");
+    
+        return isValid;
+    }
+    
 
 
 });

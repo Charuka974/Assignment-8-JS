@@ -9,7 +9,7 @@ $(document).ready(function () {
     $('#cus-save').click(function (event) {
         event.preventDefault();
 
-        if (isValidated()) {
+        if (isValidated() && isFieldValid()) {
             let customer = {
                 cusId: $('#customerId').val(),
                 cusName: $('#customerName').val(),
@@ -100,41 +100,91 @@ $(document).ready(function () {
 
     //------------------- validate regex ------------------
 
-    $(document).ready(function () {
-        function validateField(inputElement, pattern, errorSpanId, errorMessage) {
-            let value = inputElement.val().trim();
-            let errorSpan = $("#" + errorSpanId);
-    
-            if (!pattern.test(value)) {
-                inputElement.css("border", "2px solid red");
-                errorSpan.text(errorMessage);
-            } else {
-                inputElement.css("border", "2px solid green");
-                errorSpan.text("");
-            }
+    function validateField(inputElement, pattern, errorSpanId, errorMessage) {
+        let value = inputElement.val().trim();
+        let errorSpan = $("#" + errorSpanId);
+
+        if (!pattern.test(value)) {
+            inputElement.css("border", "2px solid red");
+            errorSpan.text(errorMessage);
+            return false; // Invalid field
+        } else {
+            inputElement.css("border", "2px solid green");
+            errorSpan.text("");
+            return true; // Valid field
         }
-    
-        // Attach validation on input
-        $("#customerId").on("input", function () {
-            validateField($(this), /^C\d{2}-\d{3}$/, "cusIdError", "Invalid format! (e.g., C00-001)");
-        });
-    
-        $("#customerName").on("input", function () {
-            validateField($(this), /^[A-Za-z\s]+$/, "cusNameError", "Only letters and spaces allowed.");
-        });
-    
-        $("#customerAddress").on("input", function () {
-            validateField($(this), /^[A-Za-z0-9\s,.-]{3,}$/, "cusAddressError", "Address must be at least 3 characters.");
-        });
-    
-        $("#customerSalary").on("input", function () {
-            validateField($(this), /^\d+(\.\d{1,2})?$/, "cusSalaryError", "Enter a valid salary (e.g., 50000.00).");
-        });
+    }
+
+    // Attach validation on input
+    $("#customerId").on("input", function () {
+        validateField($(this), /^C\d{2}-\d{3}$/, "cusIdError", "Invalid format! (e.g., C00-001)");
     });
-    
+
+    $("#customerName").on("input", function () {
+        validateField($(this), /^[A-Za-z\s]+$/, "cusNameError", "Only letters and spaces allowed.");
+    });
+
+    $("#customerAddress").on("input", function () {
+        validateField($(this), /^[A-Za-z0-9\s,.-]{3,}$/, "cusAddressError", "Address must be at least 3 characters.");
+    });
+
+    $("#customerSalary").on("input", function () {
+        validateField($(this), /^\d+(\.\d{1,2})?$/, "cusSalaryError", "Enter a valid salary (e.g., 50000.00).");
+    });
+
+    function isFieldValid() {
+        let isValid = true;
+
+        // Check each field validity and combine results using logical AND (&&)
+        isValid = isValid && validateField($('#customerId'), /^C\d{2}-\d{3}$/, "cusIdError", "Invalid format! (e.g., C00-001)");
+        isValid = isValid && validateField($('#customerName'), /^[A-Za-z\s]+$/, "cusNameError", "Only letters and spaces allowed.");
+        isValid = isValid && validateField($('#customerAddress'), /^[A-Za-z0-9\s,.-]{3,}$/, "cusAddressError", "Address must be at least 3 characters.");
+        isValid = isValid && validateField($('#customerSalary'), /^\d+(\.\d{1,2})?$/, "cusSalaryError", "Enter a valid salary (e.g., 50000.00).");
+
+        return isValid;
+    }
+
+    // Validation for required fields (Customer ID, Name, Address, and Salary)
+    function isValidated() {
+        let isValid = true;
+
+        let cusId = $('#customerId').val();
+        let cusName = $('#customerName').val();
+        let cusAddress = $('#customerAddress').val();
+        let cusSalary = $('#customerSalary').val();
+
+        if (!cusId) {
+            $("#cusIdError").text("Please enter the Customer ID");
+            isValid = false;
+        } else {
+            $("#cusIdError").text("");
+        }
+        if (!cusName) {
+            $("#cusNameError").text("Please enter the Customer Name");
+            isValid = false;
+        } else {
+            $("#cusNameError").text("");
+        }
+        if (!cusAddress) {
+            $("#cusAddressError").text("Please enter the Customer Address");
+            isValid = false;
+        } else {
+            $("#cusAddressError").text("");
+        }
+        if (!cusSalary) {
+            $("#cusSalaryError").text("Please enter the Customer Salary");
+            isValid = false;
+        } else {
+            $("#cusSalaryError").text("");
+        }
+
+        return isValid;
+    }
+
     
 
 });
+
 
 function loadNextCustomerId() {
     let nextId = customerModel.getNextCustomerId();
@@ -221,42 +271,6 @@ function idValidated() {
     } else {
         $("#cusIdError").text("");
     }
-    return isValid;
-}
-
-function isValidated() {
-    let isValid = true;
-
-    let cusId = $('#customerId').val();
-    let cusName = $('#customerName').val();
-    let cusAddress = $('#customerAddress').val();
-    let cusSalary = $('#customerSalary').val();
-
-    if (!cusId) {
-        $("#cusIdError").text("Please enter the Customer ID");
-        isValid = false;
-    } else {
-        $("#cusIdError").text("");
-    }
-    if (!cusName) {
-        $("#cusNameError").text("Please enter the Customer Name");
-        isValid = false;
-    } else {
-        $("#cusNameError").text("");
-    }
-    if (!cusAddress) {
-        $("#cusAddressError").text("Please enter the Customer Address");
-        isValid = false;
-    } else {
-        $("#cusAddressError").text("");
-    }
-    if (!cusSalary) {
-        $("#cusSalaryError").text("Please enter the Customer Salary");
-        isValid = false;
-    } else {
-        $("#cusSalaryError").text("");
-    }
-
     return isValid;
 }
 

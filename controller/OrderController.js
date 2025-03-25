@@ -6,6 +6,8 @@ import { orderDetailsModel } from '../model/OrderDetails.js';
 import { customerModel } from '../model/Customer.js';
 import { itemModel } from '../model/Item.js';
  
+let totalPrice = 0;
+    
 
 $(document).ready(function () {
     loadNextOrderId();
@@ -107,33 +109,55 @@ $(document).ready(function () {
 
     // --------------- order process ----------------
 
+    
     $('#addItem').click(function (event) {
         event.preventDefault();
-
+    
         if (isOrderValidated()) {
-            let orderItem = {
-                orderId: $('#orderIdTxt').val(),
-                itemCode: $('#orderItemCodeTxt').val(),
-                itemName: $('#orderitemNameTxt').val(),
-                itemPrice: parseFloat($('#orderItemPriceTxt').val()),
-                itemQty: parseInt($('#orderQtyTxt').val()),
-                total: parseFloat($('#orderItemPriceTxt').val()) * parseInt($('#orderQtyTxt').val())
-            };
-
-            orderDetailsModel.saveOrderDetails(orderItem);
-            addToOrderTable(orderItem);
-            updateTotal();
-            clearOrderItemFields();
+            let price = parseFloat($('#orderItemPriceTxt').val());
+            let quantity = parseInt($('#orderQtyTxt').val());
+    
+            let itemCode = $('#orderItemCodeTxt').val(); // Get the item code of the selected item
+            let item = itemModel.findItemByCode(itemCode); // Get item details based on the item code
+    
+            if (item) {
+                let availableQty = item.itemQtyOnHand; // Quantity on hand for the selected item
+    
+                // Check if entered quantity is greater than available quantity
+                if (quantity > availableQty) {
+                    $('#orderQtyTxtError').text(`Cannot order more than ${availableQty} items. Available stock: ${availableQty}`);
+                    return; // Stop further processing if the quantity exceeds the available stock
+                } else {
+                    $('#orderQtyTxtError').text(''); // Clear any previous error message if the quantity is valid
+                }
+    
+                let total = price * quantity;
+                totalPrice += total;
+    
+                let orderItem = {
+                    orderId: $('#orderIdTxt').val(),
+                    itemCode: itemCode,
+                    itemName: $('#orderitemNameTxt').val(),
+                    itemPrice: price,
+                    itemQty: quantity,
+                    total: total
+                };
+    
+                // Save the order item details
+                orderDetailsModel.saveOrderDetails(orderItem);
+                addToOrderTable(orderItem);
+                updateTotal(totalPrice);
+                clearOrderItemFields();
+            }
         }
     });
 
     $('#discountTxt').on('input', function () {
-        updateTotal(); // Update total when discount changes
-        updateBalance(); // Recalculate balance
+        updateTotal();
     });
 
     $('#cashTxt').on('input', function () {
-        updateBalance(); // Update balance when cash changes
+        updateBalance(); 
     });
 
     $('#purchase').click(function (event) {
@@ -183,6 +207,24 @@ $(document).ready(function () {
     });
     
 
+    $('#orderQtyTxt').on('input', function () {
+        let enteredQty = parseInt($(this).val());
+        let itemCode = $('#orderItemCodeTxt').val(); // Get the selected item's code
+    
+        if (itemCode) {
+            let item = itemModel.findItemByCode(itemCode); // Get item details based on the item code
+            if (item) {
+                let availableQty = item.itemQtyOnHand; // Quantity on hand from the item model
+    
+                // Check if entered quantity is greater than available quantity
+                if (enteredQty > availableQty) {
+                    $('#orderQtyTxtError').text(`Cannot order more than ${availableQty} items. Available stock: ${availableQty}`);
+                } else {
+                    $('#orderQtyTxtError').text(''); // Clear the error message if the quantity is valid
+                }
+            }
+        }
+    });
 
 
 
@@ -214,23 +256,25 @@ function clearOrderItemFields() {
 
 
 function updateTotal() {
-    let subtotal = orderDetailsModel.calculateSubtotal();
-    let discount = parseFloat($('#discountTxt').val()) || 0;
-    let total = subtotal - discount;
+    let discount = parseFloat($('#discountTxt').val()) || 0; 
+    let total = totalPrice - discount; 
 
-    $('#subTotal').text(total.toFixed(2)); // Subtotal should be Total - Discount
-    $('#total').text(subtotal.toFixed(2)); // Total remains unchanged before discount
+    $('#subTotal').text(total.toFixed(2)); 
+    $('#total').text(totalPrice.toFixed(2)); 
 
-    updateBalance(); // Ensure balance updates when discount changes
+    updateBalance(); 
 }
+
 
 function updateBalance() {
-    let totalAfterDiscount = parseFloat($('#subTotal').text()) || 0;
-    let cash = parseFloat($('#cashTxt').val()) || 0;
-    let balance = cash - totalAfterDiscount;
+    let totalAfterDiscount = parseFloat($('#subTotal').text()) || 0; 
+    let cash = parseFloat($('#cashTxt').val()) || 0; 
+    
+    let balance = cash - totalAfterDiscount; 
 
-    $('#balanceTxt').val(balance.toFixed(2)); // Auto-update balance field
+    $('#balanceTxt').val(balance.toFixed(2)); 
 }
+
 
 function isOrderValidated() {
     let isValid = true;
@@ -323,28 +367,20 @@ function resetOrderForm() {
 }
 
 function searchOrder(orderId) {
-    let order = orderModel.findOrderById(orderId);  // Find order by ID
+    let order = orderModel.findOrderById(orderId);
+
     if (order) {
-        // If order is found, populate the order form fields
         $("#orderIdTxt").val(order.orderId);
         $("#orderDateTxt").val(order.orderDate);
         $("#customerIdTxt").val(order.customerId);
 
-        console.log("Order found:", order);
-
-        // Fetch the order details and display them
         let orderDetails = orderDetailsModel.findOrderDetailsByOrderId(orderId);
         if (orderDetails.length > 0) {
-            console.log("Order Details:", orderDetails);
-
-            // Clear the table before populating it
             $('#ordersTable tbody').empty();
-
-            // Loop through order details and populate the table
             orderDetails.forEach(orderItem => {
                 let item = itemModel.findItemByCode(orderItem.itemCode);
-                let itemName = item ? item.itemName : "Item Not Found"; // Default value if item is not found
-            
+                let itemName = item ? item.itemName : "Item Not Found";
+
                 let newRow = `<tr>
                     <td>${orderItem.itemCode}</td>
                     <td>${itemName}</td>
@@ -354,22 +390,45 @@ function searchOrder(orderId) {
                 </tr>`;
                 $("#ordersTable tbody").append(newRow);
             });
-            
+
             loadCustomerforOrderSearch(order.customerId);
             setTotalAndBalance(order);
-        } else {
-            console.log("No order details found.");
         }
     } else {
-        console.log(`Order with ID ${orderId} not found.`);
+        $('#ordersTable tbody').empty();
     }
 }
 
-function setTotalAndBalance(order){
-    $("#cashTxt").val(order.cash);
-    $("#discountTxt").val(order.discount);
-    $("#balanceTxt").val(order.balance);
+
+function setTotalAndBalance(order) {
+    if (order) {
+    
+        let cash = parseFloat(order.cash) || 0.00;
+        let discount = parseFloat(order.discount) || 0.00;
+        let balance = parseFloat(order.balance) || 0.00;
+
+        let total = 0;
+        $('#ordersTable tbody tr').each(function () {
+            let rowTotal = parseFloat($(this).find('td:eq(4)').text()) || 0; // Get item total from the table
+            total += rowTotal; 
+        });
+
+        let subtotal = total - discount;
+
+        $("#cashTxt").val(cash.toFixed(2));
+        $("#discountTxt").val(discount.toFixed(2));
+        $("#balanceTxt").val(balance.toFixed(2));
+        $("#subTotal").text(subtotal.toFixed(2));  
+        $("#total").text(total.toFixed(2));       
+    } else {
+        $("#cashTxt").val('0.00');
+        $("#discountTxt").val('0.00');
+        $("#balanceTxt").val('0.00');
+        $("#subTotal").text('0.00');
+        $("#total").text('0.00');
+    }
 }
+
 
 function loadCustomerforOrderSearch(cusId){
     let customerId = cusId;

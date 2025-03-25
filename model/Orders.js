@@ -16,11 +16,17 @@ function saveOrder(order) {
         return false;
     }
 
+    
+    if (!order.cash) order.cash = 0.00; 
+    if (!order.discount) order.discount = 0.00;
+    if (!order.balance) order.balance = 0.00; 
+
     ordersArray.push(order);
     console.log("Order saved:", order);
     updateCounts();
     return true;
 }
+
 
 
 function getNextOrderId() {
@@ -38,5 +44,5 @@ function getNextOrderId() {
 
 function findOrderById(orderId) {
     let order = ordersArray.find(o => o.orderId === orderId);
-    return order || null;  // Return null if not found
+    return order || null;  
 }
